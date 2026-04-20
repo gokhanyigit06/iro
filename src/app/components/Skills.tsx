@@ -1,0 +1,93 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+const skills = [
+  { name: 'React / Next.js', level: 92, emoji: '⚛️', color: '#22c55e' },
+  { name: 'TypeScript', level: 85, emoji: '🔷', color: '#3b82f6' },
+  { name: 'Tailwind CSS', level: 95, emoji: '💨', color: '#06b6d4' },
+  { name: 'Firebase', level: 90, emoji: '🔥', color: '#f97316' },
+  { name: 'Node.js', level: 78, emoji: '🟢', color: '#22c55e' },
+  { name: 'Figma / Design', level: 88, emoji: '🎨', color: '#8b5cf6' },
+  { name: 'PostgreSQL', level: 72, emoji: '🐘', color: '#6366f1' },
+  { name: 'Git & DevOps', level: 85, emoji: '📦', color: '#f59e0b' },
+];
+
+const techPills = [
+  'React', 'Next.js', 'TypeScript', 'Tailwind CSS',
+  'Firebase', 'Node.js', 'Figma', 'Git', 'Vercel', 'PostgreSQL',
+];
+
+export default function Skills() {
+  const [animate, setAnimate] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setAnimate(true); }, { threshold: 0.15 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <section id="skills" ref={ref} style={{ background: '#f9fafb', padding: '100px 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
+
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <span className="section-tag">— Uzmanlık Alanlarım</span>
+          <h2 className="heading-lg">
+            Kullandığım{' '}
+            <span className="pill pill-orange">teknolojiler</span>
+          </h2>
+          <p style={{ color: '#6b7280', marginTop: 16, fontFamily: "'Inter',sans-serif", maxWidth: 500, margin: '16px auto 0' }}>
+            Her projede doğru aracı seçerek en iyi sonucu elde etmeye odaklanıyorum.
+          </p>
+        </div>
+
+        {/* Skills bars */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))', gap: 16, marginBottom: 60 }}>
+          {skills.map(skill => (
+            <div key={skill.name} className="card" style={{ padding: '20px 24px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 20 }}>{skill.emoji}</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{skill.name}</span>
+                </div>
+                <span style={{ fontWeight: 900, fontSize: '1rem', color: skill.color }}>{skill.level}%</span>
+              </div>
+              <div className="progress-track">
+                <div
+                  className="progress-fill"
+                  style={{
+                    width: animate ? `${skill.level}%` : '0%',
+                    background: `linear-gradient(90deg, ${skill.color}88, ${skill.color})`,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tech pills marquee */}
+        <div style={{ overflow: 'hidden' }}>
+          <div style={{ marginBottom: 12, textAlign: 'center' }}>
+            <span className="section-tag">Stack</span>
+          </div>
+          <div className="marquee-track">
+            <div className="marquee-content">
+              {[...techPills, ...techPills].map((tech, i) => (
+                <span
+                  key={i}
+                  className="skill-tag"
+                  style={{ margin: '0 8px', whiteSpace: 'nowrap' }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
