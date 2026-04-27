@@ -6,6 +6,7 @@ export default function About() {
   return (
     <section
       id="about"
+      className="parallax-section"
       style={{
         width: '100vw',
         minHeight: '100vh',
@@ -13,10 +14,22 @@ export default function About() {
         display: 'flex',
         alignItems: 'stretch',
         position: 'relative',
+        paddingBottom: 0,
       }}
     >
-      {/* Sol: Fotoğraf */}
+      {/* Section alt fade - Services'e geçiş */}
       <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '120px',
+        background: 'linear-gradient(to bottom, transparent 0%, #000 100%)',
+        zIndex: 10,
+        pointerEvents: 'none',
+      }} />
+      {/* Sol: Fotoğraf */}
+      <div className="reveal-left" style={{
         flex: '0 0 48%',
         position: 'relative',
         overflow: 'hidden',
@@ -39,10 +52,21 @@ export default function About() {
           background: 'linear-gradient(to right, transparent 60%, #000 100%)',
           zIndex: 2,
         }} />
+        {/* Alta siyah fade */}
+        <div style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '45%',
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.85) 80%, #000 100%)',
+          zIndex: 3,
+          pointerEvents: 'none',
+        }} />
       </div>
 
       {/* Sağ: İçerik */}
-      <div style={{
+      <div className="reveal-right" style={{
         flex: '1',
         display: 'flex',
         flexDirection: 'column',
@@ -52,7 +76,7 @@ export default function About() {
         position: 'relative',
       }}>
 
-        <div style={{ marginBottom: 32 }}>
+        <div className="reveal reveal-delay-1" style={{ marginBottom: 32 }}>
           <span style={{
             fontFamily: "'Syne', sans-serif",
             fontSize: 'clamp(0.75rem, 1.1vw, 0.9rem)',
@@ -75,15 +99,10 @@ export default function About() {
           }}>
             what am I{' '}
             <span style={{ color: '#e71c39' }}>thinking</span>
-            <span style={{
-              color: '#e71c39',
-              fontFamily: 'serif',
-              fontSize: 'clamp(2.5rem, 5.5vw, 4.5rem)',
-            }}> ?</span>
           </h2>
         </div>
 
-        <p style={{
+        <p className="reveal reveal-delay-2" style={{
           fontFamily: "'Inter', sans-serif",
           fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
           color: 'rgba(255,255,255,0.65)',
@@ -100,11 +119,11 @@ export default function About() {
           unfiltered, living mind itself, running by my own rules.
         </p>
 
-        {/* Ghost watermark */}
+        {/* Ghost watermark — İREM ÇAĞAN İ harfiyle hizalı */}
         <div style={{
           position: 'absolute',
           bottom: '8%',
-          left: 'clamp(32px, 5vw, 80px)',
+          left: 0,
           fontFamily: "'Syne', sans-serif",
           fontSize: 'clamp(4rem, 10vw, 9rem)',
           fontWeight: 900,
@@ -114,11 +133,11 @@ export default function About() {
           userSelect: 'none',
           pointerEvents: 'none',
         }}>
-          BUD
+          MIND
         </div>
 
         {/* İsim + yıl */}
-        <div style={{
+        <div className="reveal reveal-delay-3" style={{
           display: 'flex',
           alignItems: 'center',
           gap: 12,

@@ -4,39 +4,49 @@ import About from './components/About';
 import Services from './components/Services';
 import Process from './components/Process';
 import Projects from './components/Projects';
-import Skills from './components/Skills';
-import CTABanner from './components/CTABanner';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
+import LoadingScreen from './components/LoadingScreen';
+import Marquee from './components/Marquee';
+import RevealInit from './components/RevealInit';
 
 export default function Home() {
   return (
     <main>
+      {/* Scroll reveal init */}
+      <RevealInit />
+      {/* Loading screen */}
+      <LoadingScreen />
+
+      {/* Custom cursor */}
+      <CustomCursor />
+
       {/* 1. Navigation */}
       <Navbar />
 
-      {/* 2. Hero — büyük başlık + monster karakter + tech marquee */}
+      {/* 2. Hero */}
       <Hero />
+
+      {/* Marquee 1 */}
+      <Marquee />
 
       {/* 3. About */}
       <About />
 
-      {/* 4. Services — uzmanlık alanlarım (Nexia: Your Brand) */}
+      {/* 4. Services */}
       <Services />
 
-      {/* 5. Process — 01/02/03 adımlar (Nexia: How we work) */}
-      <Process />
-
-      {/* 6. Projects — proje showcase (Nexia: Our Work) */}
+      {/* 5. Projects */}
       <Projects />
 
-      {/* 7. Skills — detaylı skill bars + tech stack */}
-      <Skills />
+      {/* 6. Process */}
+      <Process />
 
-      {/* 8. CTA Banner — büyük iletişim çağrısı (Nexia: Let's turn your ideas) */}
-      <CTABanner />
+      {/* Marquee 3 */}
+      <Marquee speed={35} items={['IREM CAGAN', 'PORTFOLIO', 'CREATIVE', 'DESIGN', 'ART', 'VISION', 'IDENTITY']} />
 
-      {/* 9. Contact — form ve iletişim bilgileri */}
+      {/* 9. Contact */}
       <Contact />
 
       {/* 10. Footer */}

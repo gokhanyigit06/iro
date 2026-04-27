@@ -34,13 +34,13 @@ export default function Skills() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <span className="section-tag">— Uzmanlık Alanlarım</span>
+          <span className="section-tag">— My Expertise</span>
           <h2 className="heading-lg">
-            Kullandığım{' '}
-            <span className="pill pill-orange">teknolojiler</span>
+            Technologies{' '}
+            <span className="pill pill-orange">I use</span>
           </h2>
           <p style={{ color: '#6b7280', marginTop: 16, fontFamily: "'Inter',sans-serif", maxWidth: 500, margin: '16px auto 0' }}>
-            Her projede doğru aracı seçerek en iyi sonucu elde etmeye odaklanıyorum.
+            I focus on choosing the right tool for each project to achieve the best result.
           </p>
         </div>
 

@@ -1,203 +1,221 @@
 'use client';
 
-import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { useRef, useState } from 'react';
 
-const projects = [
-  {
-    title: 'Rota',
-    desc: 'Sürdürülebilir ürün kataloğu ve QR kod entegrasyonlu modern e-ticaret platformu.',
-    tags: ['Next.js', 'Firebase', 'Tailwind'],
-    emoji: '🌿',
-    bg: '#f0fdf4',
-    accent: '#22c55e',
-    github: 'https://github.com/',
-    live: 'https://example.com',
-    featured: true,
-  },
-  {
-    title: 'CStudio',
-    desc: 'Kreatif ajans için geliştirilen portföy ve proje yönetim platformu.',
-    tags: ['Next.js', 'TypeScript', 'Firebase Auth'],
-    emoji: '🎬',
-    bg: '#fdf4ff',
-    accent: '#8b5cf6',
-    github: 'https://github.com/',
-    live: 'https://example.com',
-    featured: true,
-  },
-  {
-    title: 'AI Recipe Generator',
-    desc: 'Elinizdeki malzemelere göre tarif öneren yapay zeka destekli uygulama.',
-    tags: ['Next.js', 'OpenAI', 'Tailwind'],
-    emoji: '🍳',
-    bg: '#fff7ed',
-    accent: '#f97316',
-    github: 'https://github.com/',
-    live: 'https://example.com',
-    featured: false,
-  },
-  {
-    title: 'Personal Dashboard',
-    desc: 'Görev yöneticisi, alışkanlık takipçisi ve hava durumu entegrasyonlu kişisel dashboard.',
-    tags: ['React', 'Redux', 'Node.js'],
-    emoji: '📊',
-    bg: '#eff6ff',
-    accent: '#3b82f6',
-    github: 'https://github.com/',
-    live: null,
-    featured: false,
-  },
-  {
-    title: 'E-Commerce Mobile',
-    desc: 'Gerçek zamanlı stok takibi ve ödeme entegrasyonlu React Native alışveriş uygulaması.',
-    tags: ['React Native', 'Expo', 'Stripe'],
-    emoji: '📱',
-    bg: '#fdf2f8',
-    accent: '#ec4899',
-    github: 'https://github.com/',
-    live: null,
-    featured: false,
-  },
-  {
-    title: 'DevBlog',
-    desc: 'MDX destekli, kod vurgulama ve full-text arama özellikli teknik blog platformu.',
-    tags: ['Next.js', 'MDX', 'Vercel'],
-    emoji: '✍️',
-    bg: '#f0f9ff',
-    accent: '#0ea5e9',
-    github: 'https://github.com/',
-    live: 'https://example.com',
-    featured: false,
-  },
+const works = [
+  { file: '/6.svg?v=4',  title: 'Alphabet & Bug',  tag: 'Typography / Illustration' },
+  { file: '/7.svg',      title: 'Work 02',          tag: 'Visual Design' },
+  { file: '/8.svg',      title: 'Work 03',          tag: 'Concept' },
+  { file: '/9.svg?v=2',  title: "Finger'S",         tag: 'Typography / Branding' },
+  { file: '/10.svg?v=3', title: 'Work 05',          tag: 'Illustration' },
 ];
 
-const filters = ['Tümü', 'Next.js', 'React', 'Firebase', 'TypeScript'];
-
 export default function Projects() {
-  const [active, setActive] = useState('Tümü');
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const didDrag = useRef(false);
 
-  const filtered = active === 'Tümü'
-    ? projects
-    : projects.filter(p => p.tags.some(t => t.includes(active)));
+  /* ── Fare ile sürükleme ── */
+  const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    const el = trackRef.current; if (!el) return;
+    didDrag.current = false;
+    drag.current = { active: true, startX: e.pageX - el.offsetLeft, scrollLeft: el.scrollLeft };
+    el.style.cursor = 'grabbing';
+  };
+  const onMouseMove = (e: React.MouseEvent) => {
+    const el = trackRef.current; if (!el || !drag.current.active) return;
+    const x = e.pageX - el.offsetLeft;
+    const delta = x - drag.current.startX;
+    if (Math.abs(delta) > 4) didDrag.current = true;
+    el.scrollLeft = drag.current.scrollLeft - delta * 1.4;
+  };
+  const onMouseUp = () => {
+    drag.current.active = false;
+    if (trackRef.current) trackRef.current.style.cursor = 'grab';
+  };
+
+  const handleCardClick = (i: number) => {
+    if (!didDrag.current) setLightbox(i);
+  };
 
   return (
-    <section id="projects" style={{ background: '#fff', padding: '100px 0' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
-
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 24 }}>
-          <div>
-            <span className="section-tag">— Geliştirdiklerim</span>
-            <h2 className="heading-lg">
-              Seçili{' '}
-              <span className="pill pill-green">projelerim</span>
-            </h2>
-          </div>
-          {/* Filter pills */}
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {filters.map(f => (
-              <button
-                key={f}
-                id={`filter-${f}`}
-                onClick={() => setActive(f)}
-                style={{
-                  padding: '8px 18px',
-                  borderRadius: 50,
-                  border: '1.5px solid',
-                  borderColor: active === f ? '#111' : '#e5e7eb',
-                  background: active === f ? '#111' : '#fff',
-                  color: active === f ? '#fff' : '#374151',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  fontFamily: "'Syne', sans-serif",
-                }}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 20 }}>
-          {filtered.map(p => (
-            <div
-              key={p.title}
-              className="card"
-              style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
-            >
-              {/* Card top banner */}
-              <div style={{
-                background: p.bg,
-                padding: '36px 32px',
-                fontSize: 64,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-                <span>{p.emoji}</span>
-                {p.featured && (
-                  <span style={{
-                    background: p.accent, color: '#fff',
-                    fontSize: '0.7rem', fontWeight: 800,
-                    padding: '4px 10px', borderRadius: 50,
-                  }}>FEATURED</span>
-                )}
-              </div>
-
-              {/* Card body */}
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontWeight: 900, fontSize: '1.2rem', marginBottom: 8 }}>{p.title}</h3>
-                <p style={{ color: '#6b7280', fontSize: '0.9rem', lineHeight: 1.6, fontFamily: "'Inter',sans-serif", marginBottom: 16, flex: 1 }}>
-                  {p.desc}
-                </p>
-
-                {/* Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
-                  {p.tags.map(tag => (
-                    <span key={tag} style={{
-                      background: p.bg, color: p.accent,
-                      border: `1px solid ${p.accent}33`,
-                      padding: '3px 10px', borderRadius: 50,
-                      fontSize: '0.78rem', fontWeight: 700,
-                    }}>{tag}</span>
-                  ))}
-                </div>
-
-                {/* Links */}
-                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <a href={p.github} target="_blank" rel="noopener noreferrer"
-                    style={{ color: '#6b7280', fontSize: '0.85rem', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                    🐙 Kaynak Kod
-                  </a>
-                  {p.live && (
-                    <>
-                      <span style={{ color: '#e5e7eb' }}>|</span>
-                      <a href={p.live} target="_blank" rel="noopener noreferrer"
-                        style={{ color: p.accent, fontSize: '0.85rem', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        <ExternalLink size={13} /> Canlı Demo
-                      </a>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* GitHub CTA */}
-        <div style={{ textAlign: 'center', marginTop: 56 }}>
-          <p style={{ color: '#6b7280', marginBottom: 16, fontFamily: "'Inter',sans-serif" }}>
-            Daha fazla proje için GitHub&apos;ı ziyaret edin
-          </p>
-          <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="btn-outline">
-            🐙 GitHub Profilim
-          </a>
-        </div>
+    <section
+      id="projects"
+      className="parallax-section"
+      style={{
+        background: '#000',
+        width: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        paddingTop: 'clamp(80px, 10vw, 140px)',
+        paddingBottom: 'clamp(60px, 8vw, 100px)',
+      }}
+    >
+      {/* ── Başlık ── */}
+      <div style={{ padding: '0 clamp(24px,5vw,80px)', marginBottom: 40 }}>
+        <span style={{
+          fontFamily: "'Syne', sans-serif",
+          fontSize: '0.72rem', fontWeight: 800,
+          letterSpacing: '0.2em', textTransform: 'uppercase',
+          color: '#e71c39', display: 'block', marginBottom: 16,
+        }}>— My Work</span>
+        <h2 style={{
+          fontFamily: "'Syne', sans-serif", fontWeight: 900,
+          fontSize: 'clamp(2.5rem, 5vw, 5rem)',
+          color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.0, margin: 0,
+        }}>
+          Selected<br /><span style={{ color: '#e71c39' }}>works.</span>
+        </h2>
       </div>
+
+      {/* ── Yatay galeri track ── */}
+      <div
+        ref={trackRef}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+        className="projects-track"
+        style={{
+          display: 'flex',
+          gap: 16,
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: 'smooth',
+          cursor: 'grab',
+          paddingLeft: 'clamp(24px,5vw,80px)',
+          paddingRight: 'clamp(24px,5vw,80px)',
+          paddingBottom: 8,
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        }}
+      >
+        {works.map((w, i) => (
+          <div
+            key={i}
+            onClick={() => handleCardClick(i)}
+            style={{
+              flex: '0 0 clamp(220px, 30vw, 400px)',
+              scrollSnapAlign: 'start',
+              borderRadius: 12,
+              overflow: 'hidden',
+              border: '1px solid #1a1a1a',
+              background: '#080808',
+              transition: 'border-color 0.3s, transform 0.3s',
+              userSelect: 'none',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLDivElement).style.borderColor = '#e71c39';
+              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-6px)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLDivElement).style.borderColor = '#1a1a1a';
+              (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+            }}
+          >
+            {/* Görsel — 3:4 oran */}
+            <div style={{ width: '100%', aspectRatio: '3/4', overflow: 'hidden', background: '#0d0d0d' }}>
+              <img
+                src={w.file}
+                alt={w.title}
+                draggable={false}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
+            </div>
+            {/* Kart alt bilgi */}
+            <div style={{ padding: '14px 16px 18px' }}>
+              <span style={{
+                fontFamily: "'Syne', sans-serif",
+                fontSize: '0.62rem', fontWeight: 800,
+                letterSpacing: '0.14em', textTransform: 'uppercase',
+                color: '#e71c39', display: 'block', marginBottom: 5,
+              }}>{w.tag}</span>
+              <h3 style={{
+                fontFamily: "'Syne', sans-serif", fontWeight: 900,
+                fontSize: 'clamp(0.95rem, 1.3vw, 1.15rem)',
+                color: '#fff', letterSpacing: '-0.02em', margin: 0,
+              }}>{w.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Lightbox ── */}
+      {lightbox !== null && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+            animation: 'fadeIn 0.25s ease',
+            cursor: 'zoom-out',
+          }}
+        >
+          {/* Kapat */}
+          <button
+            onClick={() => setLightbox(null)}
+            style={{
+              position: 'absolute', top: 24, right: 28,
+              background: 'none', border: 'none',
+              color: '#fff', fontSize: '2rem', cursor: 'pointer',
+              fontFamily: "'Syne', sans-serif", lineHeight: 1,
+            }}
+          >✕</button>
+
+          {/* Önceki */}
+          <button
+            onClick={e => { e.stopPropagation(); setLightbox((lightbox - 1 + works.length) % works.length); }}
+            style={arrowBtn}
+          >←</button>
+
+          {/* Görsel */}
+          <img
+            src={works[lightbox].file}
+            alt={works[lightbox].title}
+            onClick={e => e.stopPropagation()}
+            style={{
+              maxWidth: '85vw', maxHeight: '82vh',
+              objectFit: 'contain', borderRadius: 12,
+              display: 'block',
+            }}
+          />
+
+          {/* İsim */}
+          <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#e71c39' }}>
+              {works[lightbox].tag}
+            </span>
+            <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 900, fontSize: '1.4rem', color: '#fff', margin: '6px 0 0', letterSpacing: '-0.02em' }}>
+              {works[lightbox].title}
+            </h3>
+          </div>
+
+          {/* Sonraki */}
+          <button
+            onClick={e => { e.stopPropagation(); setLightbox((lightbox + 1) % works.length); }}
+            style={{ ...arrowBtn, left: 'auto', right: 16 }}
+          >→</button>
+        </div>
+      )}
     </section>
   );
 }
+
+const arrowBtn: React.CSSProperties = {
+  position: 'absolute', top: '50%', left: 16,
+  transform: 'translateY(-50%)',
+  background: 'rgba(255,255,255,0.06)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  borderRadius: '50%', width: 48, height: 48,
+  color: '#fff', fontSize: '1.2rem',
+  cursor: 'pointer', display: 'flex',
+  alignItems: 'center', justifyContent: 'center',
+  transition: 'background 0.2s',
+};

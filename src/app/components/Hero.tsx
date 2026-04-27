@@ -32,8 +32,8 @@ export default function Hero() {
         bottom: 0,
         left: 0,
         right: 0,
-        height: '35%',
-        background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 55%, #000 100%)',
+        height: '60%',
+        background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.85) 80%, #000 100%)',
         zIndex: 10,
         pointerEvents: 'none',
       }} />

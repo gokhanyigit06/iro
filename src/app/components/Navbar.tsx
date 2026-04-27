@@ -100,7 +100,8 @@ export default function Navbar() {
 
       {/* Mobile toggle */}
       <button
-        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, display: 'flex', alignItems: 'center' }}
+        className="mobile-toggle"
+        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, display: 'none', alignItems: 'center' }}
         onClick={() => setMobileOpen(!mobileOpen)}
         aria-label="Toggle menu"
       >
@@ -135,6 +136,7 @@ export default function Navbar() {
 
       <style>{`
         @media (min-width: 768px) { .md-show { display: list-item !important; } }
+        @media (max-width: 767px) { .mobile-toggle { display: flex !important; } }
       `}</style>
     </nav>
   );

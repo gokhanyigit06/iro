@@ -4,25 +4,25 @@ const services = [
   {
     num: '01',
     title: 'Visual Communication Design',
-    desc: 'Editorial tasarım, tipografi ve görsel dil ile güçlü bir kimlik oluşturuyorum. Her proje kendine özgü bir his taşır.',
+    desc: 'I build strong identities through editorial design, typography, and visual language. Every project carries its own unique feel.',
     tags: ['Editorial', 'Typography', 'Brand Identity'],
   },
   {
     num: '02',
-    title: 'UI/UX Tasarım',
-    desc: 'Kullanıcı odaklı, estetik ve işlevsel arayüzler. Figma ile wireframe\'den piksel mükemmeliyetine.',
+    title: 'UI/UX Design',
+    desc: 'User-centered, aesthetic and functional interfaces — from wireframe to pixel perfection with Figma.',
     tags: ['Figma', 'Prototyping', 'Design System'],
   },
   {
     num: '03',
     title: 'Full Stack Development',
-    desc: 'React, Next.js ve Node.js ile modern web uygulamaları. Frontend\'den backend\'e kadar.',
+    desc: 'Modern web applications with React, Next.js and Node.js — from frontend to backend.',
     tags: ['React', 'Next.js', 'TypeScript'],
   },
   {
     num: '04',
     title: 'Motion & Digital',
-    desc: 'Dijital içerik, animasyon ve interaktif deneyimler ile markanızı hayata geçiriyorum.',
+    desc: 'Bringing brands to life through digital content, animation, and interactive experiences.',
     tags: ['Motion', 'Digital', 'Interactive'],
   },
 ];
@@ -31,6 +31,7 @@ export default function Services() {
   return (
     <section
       id="services"
+      className="parallax-section"
       style={{
         background: '#000',
         width: '100%',
@@ -40,7 +41,7 @@ export default function Services() {
       }}
     >
       {/* Başlık */}
-      <div style={{ marginBottom: 64 }}>
+      <div className="reveal" style={{ marginBottom: 64 }}>
         <span style={{
           fontFamily: "'Syne', sans-serif",
           fontSize: '0.72rem',
@@ -50,7 +51,7 @@ export default function Services() {
           color: '#e71c39',
           display: 'block',
           marginBottom: 16,
-        }}>— Uzmanlık Alanlarım</span>
+        }}>— My Expertise</span>
         <h2 style={{
           fontFamily: "'Syne', sans-serif",
           fontWeight: 900,
@@ -69,13 +70,15 @@ export default function Services() {
         gap: 24,
         maxWidth: 1200,
       }}>
-        {services.map((s) => (
-          <div key={s.num} style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 4,
-            padding: '32px 28px',
-            background: 'rgba(255,255,255,0.02)',
-          }}>
+        {services.map((s, i) => (
+          <div key={s.num}
+            className={`reveal hover-lift reveal-delay-${i + 1}`}
+            style={{
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 4,
+              padding: '32px 28px',
+              background: 'rgba(255,255,255,0.02)',
+            }}>
             <div style={{
               fontFamily: "'Syne', sans-serif",
               fontSize: '0.7rem',

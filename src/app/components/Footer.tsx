@@ -3,83 +3,120 @@
 export default function Footer() {
   const year = new Date().getFullYear();
 
+  const links = [
+    { href: '#home', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#services', label: 'Services' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#contact', label: "Let's Talk" },
+  ];
+
+  const socials = [
+    { label: 'GitHub', href: 'https://github.com/' },
+    { label: 'LinkedIn', href: 'https://linkedin.com/' },
+    { label: 'Behance', href: 'https://behance.net/' },
+  ];
+
   return (
-    <footer style={{ background: '#111', borderTop: '1px solid #1f2937' }}>
-      {/* Main footer */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 40px 40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 48, marginBottom: 56 }}>
+    <footer style={{
+      background: '#000',
+      borderTop: '1px solid #111',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
 
-          {/* Brand */}
-          <div>
-            <div style={{ fontWeight: 900, fontSize: '2rem', color: '#fff', letterSpacing: '-0.05em', marginBottom: 12 }}>İ.Ç</div>
-            <p style={{ color: '#6b7280', fontSize: '0.88rem', lineHeight: 1.7, fontFamily: "'Inter',sans-serif", maxWidth: 240, marginBottom: 24 }}>
-              Modern, performanslı ve estetik web uygulamaları geliştiren Full Stack Developer.
-            </p>
-            {/* Socials */}
-            <div style={{ display: 'flex', gap: 10 }}>
-              {[
-                { emoji: '🐙', href: 'https://github.com/', label: 'GitHub' },
-                { emoji: '💼', href: 'https://linkedin.com/', label: 'LinkedIn' },
-              ].map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  title={s.label}
-                  style={{ width: 38, height: 38, borderRadius: 10, background: '#1f2937', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, textDecoration: 'none', transition: 'background 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = '#374151')}
-                  onMouseLeave={e => (e.currentTarget.style.background = '#1f2937')}
-                >{s.emoji}</a>
-              ))}
-            </div>
-          </div>
+      {/* Arka plan watermark */}
+      <div style={{
+        position: 'absolute',
+        bottom: '-10%',
+        right: '-2%',
+        fontFamily: "'Syne', sans-serif",
+        fontWeight: 900,
+        fontSize: 'clamp(8rem, 18vw, 18rem)',
+        color: 'rgba(255,255,255,0.025)',
+        letterSpacing: '-0.05em',
+        lineHeight: 1,
+        userSelect: 'none',
+        pointerEvents: 'none',
+      }}>
+        İ.Ç
+      </div>
 
-          {/* Nav */}
-          <div>
-            <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.85rem', marginBottom: 20, letterSpacing: '0.05em' }}>Sayfalar</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[['#home', 'Ana Sayfa'], ['#about', 'Hakkımda'], ['#services', 'Hizmetler'], ['#projects', 'Projeler']].map(([href, label]) => (
-                <a key={href} href={href} style={{ color: '#6b7280', textDecoration: 'none', fontSize: '0.88rem', fontFamily: "'Inter',sans-serif", transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#6b7280')}
-                >{label}</a>
-              ))}
-            </div>
-          </div>
+      <div style={{ padding: '40px clamp(24px,5vw,80px) 28px', position: 'relative', zIndex: 1 }}>
 
-          {/* Services */}
-          <div>
-            <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.85rem', marginBottom: 20, letterSpacing: '0.05em' }}>Hizmetler</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {['Full Stack Dev', 'UI/UX Tasarım', 'Firebase & Cloud', 'Performans & SEO'].map(s => (
-                <span key={s} style={{ color: '#6b7280', fontSize: '0.88rem', fontFamily: "'Inter',sans-serif" }}>{s}</span>
-              ))}
-            </div>
-          </div>
+        {/* Tek satır: logo sol ↔ sağ kolonu */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 32, flexWrap: 'wrap', marginBottom: 32 }}>
 
-          {/* Contact */}
-          <div>
-            <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.85rem', marginBottom: 20, letterSpacing: '0.05em' }}>İletişim</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[
-                { icon: '✉️', val: 'irem@example.com' },
-                { icon: '📍', val: 'İstanbul, Türkiye' },
-                { icon: '🟢', val: 'Müsait — İş Teklifleri Açık' },
-              ].map(({ icon, val }) => (
-                <div key={val} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                  <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>{icon}</span>
-                  <span style={{ color: '#6b7280', fontSize: '0.88rem', fontFamily: "'Inter',sans-serif", lineHeight: 1.5 }}>{val}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Sol: logo */}
+          <div style={{
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 900,
+            fontSize: '2rem',
+            color: '#fff',
+            letterSpacing: '-0.05em',
+          }}>İ.Ç</div>
+
+          {/* Sağ: nav linkleri */}
+          <nav style={{ display: 'flex', gap: 'clamp(16px,3vw,40px)', flexWrap: 'wrap', alignItems: 'center' }}>
+            {links.map(link => (
+              <a
+                key={link.href}
+                href={link.href}
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  color: 'rgba(255,255,255,0.4)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#e71c39')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ borderTop: '1px solid #1f2937', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <p style={{ color: '#4b5563', fontSize: '0.82rem', fontFamily: "'Inter',sans-serif" }}>
-            © {year} İrem Çağan. Tüm hakları saklıdır.
+        {/* Ayraç */}
+        <div style={{ height: '1px', background: '#111', marginBottom: 20 }} />
+
+        {/* Alt satır: copyright sol / sosyaller sağ */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <p style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: '0.75rem',
+            color: 'rgba(255,255,255,0.18)',
+          }}>
+            © {year} İrem Çağan. All rights reserved.
           </p>
-          <p style={{ color: '#4b5563', fontSize: '0.82rem', fontFamily: "'Inter',sans-serif" }}>
-            Next.js + Tailwind CSS — Firebase Hosting&apos;de barındırılıyor
-          </p>
+
+          <div style={{ display: 'flex', gap: 24 }}>
+            {socials.map(s => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  fontSize: '0.72rem',
+                  fontWeight: 700,
+                  color: 'rgba(255,255,255,0.18)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#e71c39')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.18)')}
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
