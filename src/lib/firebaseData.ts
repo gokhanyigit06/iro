@@ -10,44 +10,58 @@ import type {
 
 // ── Hero ──────────────────────────────────────────────
 export async function getHeroData(): Promise<HeroData | null> {
-  const snap = await getDoc(doc(db, 'portfolio', 'hero'));
-  return snap.exists() ? (snap.data() as HeroData) : null;
+  try {
+    const snap = await getDoc(doc(db, 'portfolio', 'hero'));
+    return snap.exists() ? (snap.data() as HeroData) : null;
+  } catch { return null; }
 }
 
 // ── About ─────────────────────────────────────────────
 export async function getAboutData(): Promise<AboutData | null> {
-  const snap = await getDoc(doc(db, 'portfolio', 'about'));
-  return snap.exists() ? (snap.data() as AboutData) : null;
+  try {
+    const snap = await getDoc(doc(db, 'portfolio', 'about'));
+    return snap.exists() ? (snap.data() as AboutData) : null;
+  } catch { return null; }
 }
 
 // ── Services ──────────────────────────────────────────
 export async function getServices(): Promise<Service[]> {
-  const snap = await getDocs(query(collection(db, 'services'), orderBy('num')));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Service));
+  try {
+    const snap = await getDocs(query(collection(db, 'services'), orderBy('num')));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Service));
+  } catch { return []; }
 }
 
 // ── Projects ──────────────────────────────────────────
 export async function getProjects(): Promise<Project[]> {
-  const snap = await getDocs(query(collection(db, 'projects'), orderBy('order')));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+  try {
+    const snap = await getDocs(query(collection(db, 'projects'), orderBy('order')));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+  } catch { return []; }
 }
 
 // ── Skills ────────────────────────────────────────────
 export async function getSkills(): Promise<Skill[]> {
-  const snap = await getDocs(query(collection(db, 'skills'), orderBy('order')));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as Skill));
+  try {
+    const snap = await getDocs(query(collection(db, 'skills'), orderBy('order')));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Skill));
+  } catch { return []; }
 }
 
 // ── Tech Pills ────────────────────────────────────────
 export async function getTechPills(): Promise<TechPill[]> {
-  const snap = await getDocs(query(collection(db, 'techPills'), orderBy('order')));
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as TechPill));
+  try {
+    const snap = await getDocs(query(collection(db, 'techPills'), orderBy('order')));
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as TechPill));
+  } catch { return []; }
 }
 
 // ── Contact Info ──────────────────────────────────────
 export async function getContactData(): Promise<ContactData | null> {
-  const snap = await getDoc(doc(db, 'portfolio', 'contact'));
-  return snap.exists() ? (snap.data() as ContactData) : null;
+  try {
+    const snap = await getDoc(doc(db, 'portfolio', 'contact'));
+    return snap.exists() ? (snap.data() as ContactData) : null;
+  } catch { return null; }
 }
 
 // ── Save Contact Message ──────────────────────────────
