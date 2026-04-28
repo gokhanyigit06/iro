@@ -1,6 +1,18 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { getHeroData } from '@/lib/firebaseData';
+import type { HeroData } from '@/types/portfolio';
+
 export default function Hero() {
+  const [data, setData] = useState<HeroData | null>(null);
+
+  useEffect(() => {
+    getHeroData().then(setData);
+  }, []);
+
+  const image = data?.image ?? '/3svg.svg';
+
   return (
     <section
       id="home"
@@ -12,9 +24,8 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* 3svg.svg — birebir, üstüne hiçbir şey yok */}
       <img
-        src="/3svg.svg"
+        src={image}
         alt="İrem Çağan Portfolio"
         style={{
           position: 'absolute',
@@ -25,8 +36,6 @@ export default function Hero() {
           objectPosition: 'center center',
         }}
       />
-
-      {/* Alt fade — About'a smooth geçiş */}
       <div style={{
         position: 'absolute',
         bottom: 0,

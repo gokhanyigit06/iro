@@ -1,19 +1,18 @@
 'use client';
 
-import { useRef, useState } from 'react';
-
-const works = [
-  { file: '/6.svg?v=4',  title: 'Alphabet & Bug',  tag: 'Typography / Illustration' },
-  { file: '/7.svg',      title: 'Work 02',          tag: 'Visual Design' },
-  { file: '/8.svg',      title: 'Work 03',          tag: 'Concept' },
-  { file: '/9.svg?v=2',  title: "Finger'S",         tag: 'Typography / Branding' },
-  { file: '/10.svg?v=3', title: 'Work 05',          tag: 'Illustration' },
-];
+import { useRef, useState, useEffect } from 'react';
+import { getProjects } from '@/lib/firebaseData';
+import type { Project } from '@/types/portfolio';
 
 export default function Projects() {
+  const [works, setWorks] = useState<Project[]>([]);
   const trackRef = useRef<HTMLDivElement>(null);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const didDrag = useRef(false);
+
+  useEffect(() => {
+    getProjects().then(setWorks);
+  }, []);
 
   /* ── Fare ile sürükleme ── */
   const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
@@ -45,15 +44,13 @@ export default function Projects() {
       id="projects"
       className="parallax-section"
       style={{
-        background: '#000',
-        width: '100%',
-        position: 'relative',
+        background: '#000', width: '100%', position: 'relative',
         overflow: 'hidden',
         paddingTop: 'clamp(80px, 10vw, 140px)',
         paddingBottom: 'clamp(60px, 8vw, 100px)',
       }}
     >
-      {/* ── Başlık ── */}
+      {/* Başlık */}
       <div style={{ padding: '0 clamp(24px,5vw,80px)', marginBottom: 40 }}>
         <span style={{
           fontFamily: "'Syne', sans-serif",
@@ -70,7 +67,7 @@ export default function Projects() {
         </h2>
       </div>
 
-      {/* ── Yatay galeri track ── */}
+      {/* Yatay galeri */}
       <div
         ref={trackRef}
         onMouseDown={onMouseDown}
@@ -79,34 +76,27 @@ export default function Projects() {
         onMouseLeave={onMouseUp}
         className="projects-track"
         style={{
-          display: 'flex',
-          gap: 16,
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          scrollSnapType: 'x mandatory',
-          scrollBehavior: 'smooth',
+          display: 'flex', gap: 16,
+          overflowX: 'auto', overflowY: 'hidden',
+          scrollSnapType: 'x mandatory', scrollBehavior: 'smooth',
           cursor: 'grab',
           paddingLeft: 'clamp(24px,5vw,80px)',
           paddingRight: 'clamp(24px,5vw,80px)',
           paddingBottom: 8,
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
+          msOverflowStyle: 'none', scrollbarWidth: 'none',
         }}
       >
         {works.map((w, i) => (
           <div
-            key={i}
+            key={w.id ?? i}
             onClick={() => handleCardClick(i)}
             style={{
               flex: '0 0 clamp(220px, 30vw, 400px)',
-              scrollSnapAlign: 'start',
-              borderRadius: 12,
-              overflow: 'hidden',
-              border: '1px solid #1a1a1a',
+              scrollSnapAlign: 'start', borderRadius: 12,
+              overflow: 'hidden', border: '1px solid #1a1a1a',
               background: '#080808',
               transition: 'border-color 0.3s, transform 0.3s',
-              userSelect: 'none',
-              cursor: 'pointer',
+              userSelect: 'none', cursor: 'pointer',
             }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLDivElement).style.borderColor = '#e71c39';
@@ -117,7 +107,6 @@ export default function Projects() {
               (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
             }}
           >
-            {/* Görsel — 3:4 oran */}
             <div style={{ width: '100%', aspectRatio: '3/4', overflow: 'hidden', background: '#0d0d0d' }}>
               <img
                 src={w.file}
@@ -126,11 +115,9 @@ export default function Projects() {
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
-            {/* Kart alt bilgi */}
             <div style={{ padding: '14px 16px 18px' }}>
               <span style={{
-                fontFamily: "'Syne', sans-serif",
-                fontSize: '0.62rem', fontWeight: 800,
+                fontFamily: "'Syne', sans-serif", fontSize: '0.62rem', fontWeight: 800,
                 letterSpacing: '0.14em', textTransform: 'uppercase',
                 color: '#e71c39', display: 'block', marginBottom: 5,
               }}>{w.tag}</span>
@@ -144,7 +131,7 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* ── Lightbox ── */}
+      {/* Lightbox */}
       {lightbox !== null && (
         <div
           onClick={() => setLightbox(null)}
@@ -153,41 +140,31 @@ export default function Projects() {
             background: 'rgba(0,0,0,0.92)',
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
-            padding: 24,
-            animation: 'fadeIn 0.25s ease',
-            cursor: 'zoom-out',
+            padding: 24, animation: 'fadeIn 0.25s ease', cursor: 'zoom-out',
           }}
         >
-          {/* Kapat */}
           <button
             onClick={() => setLightbox(null)}
             style={{
               position: 'absolute', top: 24, right: 28,
-              background: 'none', border: 'none',
-              color: '#fff', fontSize: '2rem', cursor: 'pointer',
+              background: 'none', border: 'none', color: '#fff',
+              fontSize: '2rem', cursor: 'pointer',
               fontFamily: "'Syne', sans-serif", lineHeight: 1,
             }}
           >✕</button>
 
-          {/* Önceki */}
           <button
             onClick={e => { e.stopPropagation(); setLightbox((lightbox - 1 + works.length) % works.length); }}
             style={arrowBtn}
           >←</button>
 
-          {/* Görsel */}
           <img
             src={works[lightbox].file}
             alt={works[lightbox].title}
             onClick={e => e.stopPropagation()}
-            style={{
-              maxWidth: '85vw', maxHeight: '82vh',
-              objectFit: 'contain', borderRadius: 12,
-              display: 'block',
-            }}
+            style={{ maxWidth: '85vw', maxHeight: '82vh', objectFit: 'contain', borderRadius: 12, display: 'block' }}
           />
 
-          {/* İsim */}
           <div style={{ marginTop: 20, textAlign: 'center' }}>
             <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#e71c39' }}>
               {works[lightbox].tag}
@@ -197,7 +174,6 @@ export default function Projects() {
             </h3>
           </div>
 
-          {/* Sonraki */}
           <button
             onClick={e => { e.stopPropagation(); setLightbox((lightbox + 1) % works.length); }}
             style={{ ...arrowBtn, left: 'auto', right: 16 }}

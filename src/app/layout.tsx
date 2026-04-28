@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import FirebaseInit from "./components/FirebaseInit";
 
 export const metadata: Metadata = {
   title: "İrem Çağan | Full Stack Developer",
@@ -22,6 +23,7 @@ export default function RootLayout({
         />
       </head>
       <body style={{ fontFamily: "'Syne', 'Inter', sans-serif" }}>
+        <FirebaseInit />
         {children}
       </body>
     </html>

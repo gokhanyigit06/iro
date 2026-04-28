@@ -1,71 +1,79 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Mail, MapPin, Send, CheckCircle } from 'lucide-react';
+import { getContactData, saveContactMessage } from '@/lib/firebaseData';
+import type { ContactData } from '@/types/portfolio';
 
 export default function Contact() {
+  const [contactData, setContactData] = useState<ContactData | null>(null);
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    getContactData().then(setContactData);
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    await new Promise(r => setTimeout(r, 1400));
-    setSending(false);
-    setDone(true);
-    setForm({ name: '', email: '', subject: '', message: '' });
-    setTimeout(() => setDone(false), 5000);
+    setError('');
+    try {
+      await saveContactMessage(form);
+      setSending(false);
+      setDone(true);
+      setForm({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setDone(false), 5000);
+    } catch {
+      setSending(false);
+      setError('Something went wrong. Please try again.');
+    }
+  };
+
+  const cd = contactData ?? {
+    email: 'irem@example.com',
+    location: 'Istanbul, Turkey',
+    github: 'https://github.com/',
+    linkedin: 'https://linkedin.com/',
+    behance: 'https://behance.net/',
+    available: true,
+    availabilityText: 'Open to new projects',
   };
 
   const inputStyle: React.CSSProperties = {
-    width: '100%',
-    border: '1px solid #1a1a1a',
-    borderRadius: 12,
-    padding: '14px 18px',
-    fontSize: '0.95rem',
+    width: '100%', border: '1px solid #1a1a1a', borderRadius: 12,
+    padding: '14px 18px', fontSize: '0.95rem',
     fontFamily: "'Inter', sans-serif",
-    background: '#0a0a0a',
-    color: '#fff',
-    outline: 'none',
-    transition: 'border-color 0.2s',
+    background: '#0a0a0a', color: '#fff',
+    outline: 'none', transition: 'border-color 0.2s',
   };
+
+  const socials = [
+    { label: 'GitHub',   href: cd.github },
+    { label: 'LinkedIn', href: cd.linkedin },
+    { label: 'Behance',  href: cd.behance },
+  ];
 
   return (
     <section id="contact" className="parallax-section" style={{
-      background: '#000',
-      paddingBottom: 100,
-      position: 'relative',
-      overflow: 'hidden',
+      background: '#000', paddingBottom: 100,
+      position: 'relative', overflow: 'hidden',
     }}>
-
-      {/* 111.svg — sol alana sabitlenmiş arka plan */}
+      {/* Arka plan SVG */}
       <div style={{
-        position: 'absolute',
-        left: '8%',
-        top: 0,
-        bottom: 0,
-        width: '50%',
-        zIndex: 0,
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
+        position: 'absolute', left: '8%', top: 0, bottom: 0, width: '50%',
+        zIndex: 0, pointerEvents: 'none',
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
       }}>
         <img
           src="/111.svg"
           alt=""
-          style={{
-            height: '100%',
-            width: 'auto',
-            maxWidth: 'none',
-            opacity: 0.4,
-            userSelect: 'none',
-          }}
+          style={{ height: '100%', width: 'auto', maxWidth: 'none', opacity: 0.4, userSelect: 'none' }}
           draggable={false}
         />
       </div>
-
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '120px clamp(24px,5vw,80px) 0', position: 'relative', zIndex: 1 }}>
 
@@ -74,8 +82,7 @@ export default function Contact() {
           <span style={{
             fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.22em',
             textTransform: 'uppercase', color: '#e71c39',
-            display: 'block', marginBottom: 14,
-            fontFamily: "'Syne', sans-serif",
+            display: 'block', marginBottom: 14, fontFamily: "'Syne', sans-serif",
           }}>— Let's Work Together</span>
 
           <h2 style={{
@@ -87,23 +94,18 @@ export default function Contact() {
             <span style={{ color: '#e71c39' }}>Let's talk.</span>
           </h2>
 
-          <p style={{
-            color: '#444', fontSize: '0.95rem', lineHeight: 1.7,
-            fontFamily: "'Inter', sans-serif", maxWidth: 420,
-          }}>
+          <p style={{ color: '#444', fontSize: '0.95rem', lineHeight: 1.7, fontFamily: "'Inter', sans-serif", maxWidth: 420 }}>
             From creative projects to brand identity — I'm here to create with you.
           </p>
         </div>
 
-        {/* İki kolon: sol bilgi / sağ form */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: 48, alignItems: 'start' }}>
-
 
           {/* Sol — iletişim bilgileri */}
           <div className="reveal-left" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {[
-              { icon: Mail,    label: 'Email',    value: 'irem@example.com', href: 'mailto:irem@example.com' },
-              { icon: MapPin,  label: 'Location', value: 'Istanbul, Turkey', href: null },
+              { icon: Mail,   label: 'Email',    value: cd.email,    href: `mailto:${cd.email}` },
+              { icon: MapPin, label: 'Location', value: cd.location, href: null },
             ].map(({ icon: Icon, label, value, href }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 <div style={{
@@ -130,17 +132,15 @@ export default function Contact() {
             }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#e71c39', flexShrink: 0, animation: 'pulse 2s ease-in-out infinite' }} />
               <div>
-                <div style={{ fontWeight: 800, color: '#fff', fontFamily: "'Syne',sans-serif", fontSize: '0.9rem' }}>Available</div>
-                <div style={{ fontSize: '0.78rem', color: '#555', fontFamily: "'Inter',sans-serif", marginTop: 2 }}>Open to new projects</div>
+                <div style={{ fontWeight: 800, color: '#fff', fontFamily: "'Syne',sans-serif", fontSize: '0.9rem' }}>
+                  {cd.available ? 'Available' : 'Unavailable'}
+                </div>
+                <div style={{ fontSize: '0.78rem', color: '#555', fontFamily: "'Inter',sans-serif", marginTop: 2 }}>{cd.availabilityText}</div>
               </div>
             </div>
 
             <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
-              {[
-                { label: 'GitHub',   href: 'https://github.com/' },
-                { label: 'LinkedIn', href: 'https://linkedin.com/' },
-                { label: 'Behance',  href: 'https://behance.net/' },
-              ].map(s => (
+              {socials.map(s => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{ padding: '10px 18px', border: '1px solid #1a1a1a', borderRadius: 50, textDecoration: 'none', color: '#555', fontWeight: 700, fontSize: '0.82rem', fontFamily: "'Syne',sans-serif", transition: 'color 0.2s, border-color 0.2s', letterSpacing: '0.05em' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#e71c39'; (e.currentTarget as HTMLAnchorElement).style.borderColor = '#e71c3944'; }}
@@ -192,6 +192,7 @@ export default function Contact() {
                     onBlur={e => (e.target as HTMLTextAreaElement).style.borderColor = '#1a1a1a'}
                     onChange={e => setForm({ ...form, message: e.target.value })} />
                 </div>
+                {error && <p style={{ color: '#e71c39', fontFamily: "'Inter',sans-serif", fontSize: '0.85rem' }}>{error}</p>}
                 <button id="contact-submit" type="submit" disabled={sending} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                   background: sending ? '#1a1a1a' : '#e71c39', color: '#fff', border: 'none',
@@ -204,9 +205,9 @@ export default function Contact() {
                 </button>
               </form>
             )}
-          </div>  {/* form kartı */}
-        </div>    {/* bilgi+form grid */}
-      </div>      {/* ana container */}
+          </div>
+        </div>
+      </div>
 
       <style>{`
         @keyframes spin  { to { transform: rotate(360deg); } }

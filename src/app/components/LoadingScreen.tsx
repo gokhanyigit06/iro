@@ -19,8 +19,10 @@ export default function LoadingScreen() {
     const t1 = setTimeout(() => setPhase('exit'), 2200);
     // 2.9 sn sonra tamamen kaldır
     const t2 = setTimeout(() => setPhase('done'), 2900);
+    // Güvenlik: en geç 4 sn'de kaldır
+    const t3 = setTimeout(() => setPhase('done'), 4000);
 
-    return () => { clearInterval(interval); clearTimeout(t1); clearTimeout(t2); };
+    return () => { clearInterval(interval); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   if (phase === 'done') return null;

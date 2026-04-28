@@ -1,32 +1,27 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
-const skills = [
-  { name: 'React / Next.js', level: 92, emoji: '⚛️', color: '#22c55e' },
-  { name: 'TypeScript', level: 85, emoji: '🔷', color: '#3b82f6' },
-  { name: 'Tailwind CSS', level: 95, emoji: '💨', color: '#06b6d4' },
-  { name: 'Firebase', level: 90, emoji: '🔥', color: '#f97316' },
-  { name: 'Node.js', level: 78, emoji: '🟢', color: '#22c55e' },
-  { name: 'Figma / Design', level: 88, emoji: '🎨', color: '#8b5cf6' },
-  { name: 'PostgreSQL', level: 72, emoji: '🐘', color: '#6366f1' },
-  { name: 'Git & DevOps', level: 85, emoji: '📦', color: '#f59e0b' },
-];
-
-const techPills = [
-  'React', 'Next.js', 'TypeScript', 'Tailwind CSS',
-  'Firebase', 'Node.js', 'Figma', 'Git', 'Vercel', 'PostgreSQL',
-];
+import { getSkills, getTechPills } from '@/lib/firebaseData';
+import type { Skill, TechPill } from '@/types/portfolio';
 
 export default function Skills() {
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [techPills, setTechPills] = useState<TechPill[]>([]);
   const [animate, setAnimate] = useState(false);
   const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    getSkills().then(setSkills);
+    getTechPills().then(setTechPills);
+  }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setAnimate(true); }, { threshold: 0.15 });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
+
+  const pills = techPills.length > 0 ? techPills : [];
 
   return (
     <section id="skills" ref={ref} style={{ background: '#f9fafb', padding: '100px 0' }}>
@@ -47,7 +42,7 @@ export default function Skills() {
         {/* Skills bars */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))', gap: 16, marginBottom: 60 }}>
           {skills.map(skill => (
-            <div key={skill.name} className="card" style={{ padding: '20px 24px' }}>
+            <div key={skill.id ?? skill.name} className="card" style={{ padding: '20px 24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: 20 }}>{skill.emoji}</span>
@@ -68,20 +63,20 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Tech pills marquee */}
+        {/* Tech pills */}
         <div style={{ overflow: 'hidden' }}>
           <div style={{ marginBottom: 12, textAlign: 'center' }}>
             <span className="section-tag">Stack</span>
           </div>
           <div className="marquee-track">
             <div className="marquee-content">
-              {[...techPills, ...techPills].map((tech, i) => (
+              {[...pills, ...pills].map((tech, i) => (
                 <span
                   key={i}
                   className="skill-tag"
                   style={{ margin: '0 8px', whiteSpace: 'nowrap' }}
                 >
-                  {tech}
+                  {tech.label}
                 </span>
               ))}
             </div>
